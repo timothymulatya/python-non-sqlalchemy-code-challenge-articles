@@ -59,18 +59,37 @@ class Article:
 class Author:
     def __init__(self, name):
         self.name = name
-
+        self._articles = []
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self, name):
+        if hasattr(self, "_name"):
+            raise AttributeError("Name cannot be changed")
+        if not isinstance(name, str):
+            raise TypeError("Name must be a string")
+        if len(name) == 0:
+            raise ValueError("Name must be longer than 0 characters")
+        self._name = name
+    
     def articles(self):
-        pass
-
+        return self._articles
+    
     def magazines(self):
-        pass
-
+        return list({article.magazine for article in self._articles})
+    
     def add_article(self, magazine, title):
-        pass
-
+        new_article = Article(self, magazine, title)
+        return new_article
+    
     def topic_areas(self):
-        pass
+        if not self._articles:
+            return None
+        categories = {article.magazine.category for article in self._articles}
+        return list(categories)
 
 class Magazine:
     def __init__(self, name, category):
